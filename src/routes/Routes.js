@@ -8,6 +8,7 @@ router.post('/user',userController.createUser); // Create user
 router.get('/users', userController.getUsers);   // List users
 router.put('/user/:id',userController.updateUser); // Update user
 router.delete('/user/:id', userController.deleteUser); // Delete user
+router.post('/login', userController.Login); // Delete user
 
 router.post("/projects",authenticate,projectController.createProject);
 router.get("/projects",authenticate,projectController.listProjects);
