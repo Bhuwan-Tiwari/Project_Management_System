@@ -119,26 +119,6 @@ Copy code
 Folder Structure
 bash
 Copy code
-project-management-api/
-├── src/
-│   ├── controllers/
-│   │   ├── userController.js
-│   │   ├── projectController.js
-│   │   └── taskController.js
-│   ├── middlewares/
-│   │   └── authMiddleware.js
-│   ├── routes/
-│   │   ├── userRoutes.js
-│   │   ├── projectRoutes.js
-│   │   └── taskRoutes.js
-│   ├── utils/
-│   │   └── jwtUtils.js
-│   ├── prisma/
-│   │   └── schema.prisma
-│   ├── index.js
-│   └── app.js
-├── .env
-└── package.json
 
 
 
