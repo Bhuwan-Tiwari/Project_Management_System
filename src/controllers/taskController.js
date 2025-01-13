@@ -1,12 +1,10 @@
 const prisma = require("../config/database.js");
 
-
 const createTask = async (req, res) => {
   try {
     const { projectId } = req.params;
     const { title, description, assignedUserId } = req.body;
 
-    
     const project = await prisma.project.findUnique({
       where: { id: projectId },
     });
@@ -14,13 +12,12 @@ const createTask = async (req, res) => {
       return res.status(404).json({ error: "Project not found." });
     }
 
-
     const newTask = await prisma.task.create({
       data: {
         title,
         description,
         projectId,
-        assignedUserId, 
+        assignedUserId,
       },
     });
 
@@ -31,12 +28,10 @@ const createTask = async (req, res) => {
   }
 };
 
-
 const listTasks = async (req, res) => {
   try {
     const { projectId } = req.params;
 
-  
     const project = await prisma.project.findUnique({
       where: { id: projectId },
     });
@@ -55,13 +50,11 @@ const listTasks = async (req, res) => {
   }
 };
 
-
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, status } = req.body;
     const { userId } = req;
-
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -70,11 +63,11 @@ const updateTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found." });
     }
 
-    
     if (task.assignedUserId !== userId) {
-      return res.status(403).json({ error: "You are not authorized to update this task." });
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to update this task." });
     }
-
 
     const updatedTask = await prisma.task.update({
       where: { id },
@@ -92,13 +85,11 @@ const updateTask = async (req, res) => {
   }
 };
 
-
 const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
     const { userId } = req;
 
-   
     const task = await prisma.task.findUnique({
       where: { id },
     });
@@ -106,12 +97,12 @@ const deleteTask = async (req, res) => {
       return res.status(404).json({ error: "Task not found." });
     }
 
- 
     if (task.assignedUserId !== userId) {
-      return res.status(403).json({ error: "You are not authorized to delete this task." });
+      return res
+        .status(403)
+        .json({ error: "You are not authorized to delete this task." });
     }
 
-  
     await prisma.task.delete({
       where: { id },
     });

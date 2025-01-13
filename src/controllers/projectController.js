@@ -2,14 +2,14 @@ const prisma = require("../config/database.js");
 
 const createProject = async (req, res) => {
   try {
-    const { name, description, status, userId} = req.body;
-    console.log(req.body)
+    const { name, description, status, userId } = req.body;
+    console.log(req.body);
     if (!name || !description || !userId) {
       return res
         .status(400)
         .json({ error: "Name, description, or userId are required." });
     }
-console.log(userId)
+    console.log(userId);
     const userExists = await prisma.user.findUnique({ where: { id: userId } });
     if (!userExists) {
       return res.status(404).json({ error: "User not found." });
@@ -35,8 +35,8 @@ const listProjects = async (req, res) => {
   try {
     const projects = await prisma.project.findMany({
       include: {
-        user: true, // Include the user details for each project
-        tasks: true, // Include tasks under each project
+        user: true,
+        tasks: true,
       },
     });
 
@@ -50,8 +50,8 @@ const listProjects = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, status,userId} = req.body;
-     // Assume userId is extracted from JWT in auth middleware
+    const { name, description, status, userId } = req.body;
+    // Assume userId is extracted from JWT in auth middleware
 
     const project = await prisma.project.findUnique({ where: { id } });
     if (!project) {
@@ -79,7 +79,7 @@ const updateProject = async (req, res) => {
 const deleteProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId} = req.body; // Assume userId is extracted from JWT in auth middleware
+    const { userId } = req.body; // Assume userId is extracted from JWT in auth middleware
 
     const project = await prisma.project.findUnique({ where: { id } });
     if (!project) {

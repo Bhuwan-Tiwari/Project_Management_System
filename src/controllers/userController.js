@@ -4,42 +4,40 @@ const bcrypt = require("bcryptjs");
 const { generateToken } = require("../utils/jwtUtils.js");
 
 const createUser = async (req, res) => {
-    try {
-      const { name, email,password} = req.body;
+  try {
+    const { name, email, password } = req.body;
 
-      if (!name || !email || !password) {
-        return res.status(400).json({ error: "Name and email are required." });
-      }
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: "Name and email are required." });
+    }
 
-      const newUser = await prisma.User.create({
-        data: {
-          name,
-          email,
-          password: hashedPassword,
-        },
-      });
-  
-      res.status(201).json(newUser);
-    } catch (error) {
-      console.error("Error creating user:", error);
-  
-  
-      if (error.code === "P2002") {
-        return res.status(409).json({
-          error: "A user with this email already exists.",
-          field: error.meta?.target || "email",
-        });
-      }
-  
-      return res.status(500).json({
-        error: "Internal server error.",
-        message: error.message || "Something went wrong.",
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await prisma.User.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
+
+    res.status(201).json(newUser);
+  } catch (error) {
+    console.error("Error creating user:", error);
+
+    if (error.code === "P2002") {
+      return res.status(409).json({
+        error: "A user with this email already exists.",
+        field: error.meta?.target || "email",
       });
     }
-  };
-  
+
+    return res.status(500).json({
+      error: "Internal server error.",
+      message: error.message || "Something went wrong.",
+    });
+  }
+};
 
 const getUsers = async (req, res) => {
   try {
@@ -83,9 +81,9 @@ const deleteUser = async (req, res) => {
     });
 
     return res.status(204).json({
-        success:true,
-        message:'sucessfully Deleted the user',
-    }); 
+      success: true,
+      message: "sucessfully Deleted the user",
+    });
   } catch (error) {
     if (error.code === "P2025") {
       return res.status(404).json({ error: "User not found." });
@@ -122,5 +120,5 @@ module.exports = {
   getUsers,
   updateUser,
   deleteUser,
-  Login
+  Login,
 };
