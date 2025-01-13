@@ -93,9 +93,9 @@ Copy code
 - **PUT /project/:id**: Update a project's details.
 - **DELETE /project/:id**: Delete a project.
 
+## Prisma Schema
 
-prisma
-Copy code
+```prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -149,8 +149,7 @@ model Task {
   assignedUserId String?
   assignedUser   User?      @relation(fields: [assignedUserId], references: [id])
 }
-Authentication Middleware
-For authentication, a valid JWT token is required for accessing project and task data. When making requests to protected endpoints, include the token in the Authorization header as follows:
+
 
 bash
 Copy code
