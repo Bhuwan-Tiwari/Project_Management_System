@@ -63,12 +63,11 @@ POST /login: Login with credentials and receive a JWT token.
 
 Request body:
 
-json
-Copy code
 {
   "email": "user@example.com",
   "password": "your-password"
 }
+
 Response:
 
 json
@@ -76,27 +75,24 @@ Copy code
 {
   "token": "jwt-token-here"
 }
-User Endpoints
-POST /users: Create a new user.
-GET /users: List all users.
-GET /user/:id: Get details of a specific user.
-PUT /user/:id: Update a user's details.
-DELETE /user/:id: Delete a user.
-Project Endpoints
-POST /projects: Create a new project.
-GET /projects: List all projects.
-GET /project/:id: Get details of a specific project.
-PUT /project/:id: Update a project's details.
-DELETE /project/:id: Delete a project.
-Task Endpoints
-POST /project/:projectId/tasks: Create a new task under a specific project.
-GET /project/:projectId/tasks: List tasks for a project.
-GET /tasks: List all tasks, filter by status or user.
-GET /task/:id: Get details of a specific task.
-PUT /task/:id: Update a task's details.
-DELETE /task/:id: Delete a task.
-Database Schema
-This project uses Prisma ORM with a PostgreSQL database. Below is the Prisma schema for the application:
+## API Endpoints
+
+### User Endpoints
+
+- **POST /users**: Create a new user.
+- **GET /users**: List all users.
+- **GET /user/:id**: Get details of a specific user.
+- **PUT /user/:id**: Update a user's details.
+- **DELETE /user/:id**: Delete a user.
+
+### Project Endpoints
+
+- **POST /projects**: Create a new project.
+- **GET /projects**: List all projects.
+- **GET /project/:id**: Get details of a specific project.
+- **PUT /project/:id**: Update a project's details.
+- **DELETE /project/:id**: Delete a project.
+
 
 prisma
 Copy code
