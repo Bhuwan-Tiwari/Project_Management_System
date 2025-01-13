@@ -1,129 +1,192 @@
-# Project Management API
+# Project Management System
 
-This is a Project Management API built with Node.js, Express, Prisma, and PostgreSQL. The API allows users to manage projects, tasks, and assign tasks to users. It includes JWT authentication for protected routes.
+This is a backend API for a Project Management System built with **Node.js**, **Prisma**, **Express**, and **PostgreSQL**. It allows users to manage projects, tasks, and users with secure JWT-based authentication.
 
 ## Features
 
-- **Project Management**: 
-  - Create, Update, Delete, and List Projects.
-  - Projects are associated with users and have statuses (Planned, Ongoing, Completed).
-  
-- **Task Management**: 
-  - Add tasks to projects.
-  - Assign tasks to users.
-  - Update task status (e.g., TODO, IN_PROGRESS, DONE).
-  
-- **Authentication**: 
-  - Basic JWT authentication to secure routes.
-  - Only authorized users (based on JWT) can update or delete projects and tasks.
+- **User Management**: Allows creation, listing, updating, and deletion of users.
+- **Project Management**: Create, update, delete, and list projects.
+- **Task Management**: Create, update, delete, and list tasks. Tasks can be filtered by status and assigned user.
+- **Authentication**: JWT-based authentication for secure access to project and task data.
 
-## Technologies Used
+## Tech Stack
 
-- **Node.js**: Server-side JavaScript runtime.
-- **Express.js**: Web framework for Node.js.
-- **Prisma**: ORM for interacting with the PostgreSQL database.
-- **PostgreSQL**: Relational database for storing user, project, and task data.
-- **JWT (JSON Web Tokens)**: For authentication and authorization.
+- **Node.js**: Backend runtime environment.
+- **Express.js**: Web framework for Node.js to handle routing and middleware.
+- **Prisma ORM**: ORM for managing PostgreSQL database.
+- **PostgreSQL**: Relational database for storing project and task data.
+- **JWT**: Token-based authentication for secure user login and access control.
+- **bcryptjs**: For hashing passwords securely.
 
-## Endpoints
+## Prerequisites
 
-### Authentication
+Ensure that the following tools are installed:
 
-- **POST /auth/login**: Login and get a JWT token.
-  
-### Project Management
+- **Node.js** (v16.0.0 or higher)
+- **PostgreSQL** (or a PostgreSQL database connection)
 
-- **POST /projects**: Create a new project.
-- **GET /projects**: Get all projects.
-- **GET /projects/:id**: Get a specific project by ID.
-- **PUT /projects/:id**: Update a project (requires JWT token).
-- **DELETE /projects/:id**: Delete a project (requires JWT token).
-
-### Task Management
-
-- **POST /projects/:projectId/tasks**: Create a task under a project.
-- **GET /projects/:projectId/tasks**: List all tasks for a project.
-- **PUT /tasks/:id**: Update task details or status (requires JWT token).
-- **DELETE /tasks/:id**: Delete a task (requires JWT token).
-
-## Setup
-
-### Prerequisites
-
-- Node.js
-- PostgreSQL
-- Prisma CLI
-
-### Installation
+## Installation
 
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/project-management-api.git
-   cd project-management-api
+   git clone https://github.com/your-username/project-management-system.git
+   cd project-management-system
 Install dependencies:
 
 bash
 Copy code
 npm install
-Set up environment variables:
+Set up your environment variables:
 
-Create a .env file in the root of the project and add the following:
+Create a .env file at the root of the project and add the following variables:
 
 env
 Copy code
-DATABASE_URL=postgresql://youruser:yourpassword@localhost:5432/yourdatabase?schema=public
-JWT_SECRET=your_jwt_secret
-Migrate the database:
+DATABASE_URL=postgresql://your-username:your-password@localhost:5432/your-database-name
+JWT_SECRET=your-jwt-secret-key
+Set up the database schema with Prisma:
 
 bash
 Copy code
 npx prisma migrate dev --name init
-Seed the database (optional):
-
-If you want to populate your database with initial data, you can create a seed script or use Prisma Studio to insert data.
-
-Start the server:
+Start the application:
 
 bash
 Copy code
 npm start
-The server will start at http://localhost:3000.
+The server will be running at http://localhost:3000.
 
-Testing API Endpoints with Postman
-You can test the API endpoints using Postman. Ensure to include the JWT token in the Authorization header for any routes that require authentication.
+API Endpoints
+Authentication
+POST /login: Login with credentials and receive a JWT token.
 
-Example Postman Setup:
-Authorization: Select Bearer Token and paste the JWT token.
-Body: Use raw JSON format for POST/PUT requests.
-Example Requests:
-POST /auth/login:
+Request body:
 
-Request Body:
 json
 Copy code
 {
   "email": "user@example.com",
-  "password": "yourpassword"
+  "password": "your-password"
 }
-POST /projects:
+Response:
 
-Request Body:
 json
 Copy code
 {
-  "name": "New Project",
-  "description": "Project description",
-  "status": "PLANNED"
+  "token": "jwt-token-here"
 }
-Folder Structure
+User Endpoints
+POST /users: Create a new user.
+GET /users: List all users.
+GET /user/:id: Get details of a specific user.
+PUT /user/:id: Update a user's details.
+DELETE /user/:id: Delete a user.
+Project Endpoints
+POST /projects: Create a new project.
+GET /projects: List all projects.
+GET /project/:id: Get details of a specific project.
+PUT /project/:id: Update a project's details.
+DELETE /project/:id: Delete a project.
+Task Endpoints
+POST /project/:projectId/tasks: Create a new task under a specific project.
+GET /project/:projectId/tasks: List tasks for a project.
+GET /tasks: List all tasks, filter by status or user.
+GET /task/:id: Get details of a specific task.
+PUT /task/:id: Update a task's details.
+DELETE /task/:id: Delete a task.
+Database Schema
+This project uses Prisma ORM with a PostgreSQL database. Below is the Prisma schema for the application:
+
+prisma
+Copy code
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String
+  createdAt DateTime  @default(now())
+  projects  Project[]
+  tasks     Task[]
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  COMPLETED
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String
+  status      ProjectStatus @default(PLANNED)
+  createdAt   DateTime      @default(now())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  tasks       Task[]
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+model Task {
+  id             String     @id @default(uuid())
+  title          String
+  description    String
+  status         TaskStatus @default(TODO)
+  createdAt      DateTime   @default(now())
+  projectId      String
+  project        Project    @relation(fields: [projectId], references: [id])
+  assignedUserId String?
+  assignedUser   User?      @relation(fields: [assignedUserId], references: [id])
+}
+Authentication Middleware
+For authentication, a valid JWT token is required for accessing project and task data. When making requests to protected endpoints, include the token in the Authorization header as follows:
+
+bash
+Copy code
+Authorization: Bearer <jwt-token>
+Running Tests
+If you want to run tests for the application, ensure the test framework is set up and use:
+
+bash
+Copy code
+npm test
+Contributing
+Fork the repository.
+Create a new branch: git checkout -b feature-branch.
+Commit your changes: git commit -am 'Add new feature'.
+Push to the branch: git push origin feature-branch.
+Create a pull request.
+License
+This project is licensed under the MIT License.
+
 bash
 Copy code
 
+#### Additional Files
 
+1. **.env** file:
 
-Acknowledgements
-Prisma ORM for database management.
-Express.js for routing and API management.
-PostgreSQL for database storage.
-JWT for authentication.
+   ```env
+   DATABASE_URL=postgresql://your-username:your-password@localhost:5432/your-database-name
+   JWT_SECRET=your-jwt-secret-key
+.gitignore file:
+
+gitignore
+Copy code
+node_modules/
+.env
