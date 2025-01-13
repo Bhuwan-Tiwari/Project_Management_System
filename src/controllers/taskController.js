@@ -53,8 +53,7 @@ const listTasks = async (req, res) => {
 const updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, status } = req.body;
-    const { userId } = req;
+    const { title, description, status, userId } = req.body;
 
     const task = await prisma.task.findUnique({
       where: { id },
@@ -88,7 +87,7 @@ const updateTask = async (req, res) => {
 const deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const { userId } = req;
+    const { userId } = req.body;
 
     const task = await prisma.task.findUnique({
       where: { id },
