@@ -114,4 +114,26 @@ const deleteTask = async (req, res) => {
   }
 };
 
-module.exports = { createTask, listTasks, updateTask, deleteTask };
+const filterTasks = async (req, res) => {
+  try {
+    const { status, assignedUserId } = req.query;
+
+    const filters = {};
+    if (status) filters.status = status;
+    if (assignedUserId) filters.assignedUserId = assignedUserId;
+
+    const tasks = await prisma.task.findMany({
+      where: filters,
+      include: {
+        assignedUser: true,
+        project: true,
+      },
+    });
+
+    res.status(200).json(tasks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error." });
+  }
+};
+module.exports = { createTask, listTasks, updateTask, deleteTask, filterTasks };
