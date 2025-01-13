@@ -22,7 +22,7 @@ This is a backend API for a Project Management System built with **Node.js**, **
 
 Ensure that the following tools are installed:
 
-- **Node.js** (v16.0.0 or higher)
+- **Node.js** (v18.0.0 or higher)
 - **PostgreSQL** (or a PostgreSQL database connection)
 
 ## Installation
